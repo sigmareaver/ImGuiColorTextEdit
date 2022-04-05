@@ -3,7 +3,7 @@
 #include <fstream>
 #include <streambuf>
 
-#include "imgui.h"
+#include <imgui_docking/imgui.h>
 #include <tchar.h>
 
 #include "TextEditor.h"
@@ -103,8 +103,8 @@ void ShowExampleTextEditor(bool* p_open)
 					auto textToSave = editor.GetText();
 					/// save text....
 				}
-				if (ImGui::MenuItem("Quit", "Alt-F4"))
-					break;
+				if (ImGui::MenuItem("Close") && p_open)
+					*p_open = false;
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Edit"))
