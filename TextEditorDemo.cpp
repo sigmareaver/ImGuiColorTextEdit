@@ -11,11 +11,13 @@
 
 void ShowExampleTextEditor(bool* p_open)
 {
-	ImVec4 clear_col = ImColor(114, 144, 154);
+	static bool init = false;
+	static ImVec4 clear_col = ImColor(114, 144, 154);
 	///////////////////////////////////////////////////////////////////////
 	// TEXT EDITOR SAMPLE
-	TextEditor editor;
-	auto lang = TextEditor::LanguageDefinition::CPlusPlus();
+	static TextEditor editor;
+	static auto lang = TextEditor::LanguageDefinition::CPlusPlus();
+	static const char* fileToEdit = "res/lua/gui/test_window.lua";
 
 	// set your own known preprocessor symbols...
 	static const char* ppnames[] = { "NULL", "PM_REMOVE",
@@ -35,14 +37,6 @@ void ShowExampleTextEditor(bool* p_open)
 		"    (_wassert(_CRT_WIDE(#expression), _CRT_WIDE(__FILE__), (unsigned)(__LINE__)), 0) \n"
 		" )"
 	};
-
-	for (int i = 0; i < sizeof(ppnames) / sizeof(ppnames[0]); ++i)
-	{
-		TextEditor::Identifier id;
-		id.mDeclaration = ppvalues[i];
-		lang.mPreprocIdentifiers.insert(std::make_pair(std::string(ppnames[i]), id));
-	}
-
 	// set your own identifiers
 	static const char* identifiers[] = {
 		"HWND", "HRESULT", "LPRESULT","D3D11_RENDER_TARGET_VIEW_DESC", "DXGI_SWAP_CHAIN_DESC","MSG","LRESULT","WPARAM", "LPARAM","UINT","LPVOID",
@@ -56,42 +50,54 @@ void ShowExampleTextEditor(bool* p_open)
 		"ID3D11Device", "ID3D11DeviceContext", "ID3D11Buffer", "ID3D11Buffer", "ID3D10Blob", "ID3D11VertexShader", "ID3D11InputLayout", "ID3D11Buffer",
 		"ID3D10Blob", "ID3D11PixelShader", "ID3D11SamplerState", "ID3D11ShaderResourceView", "ID3D11RasterizerState", "ID3D11BlendState", "ID3D11DepthStencilState",
 		"IDXGISwapChain", "ID3D11RenderTargetView", "ID3D11Texture2D", "class TextEditor" };
-	for (int i = 0; i < sizeof(identifiers) / sizeof(identifiers[0]); ++i)
+
+	if (!init)
 	{
-		TextEditor::Identifier id;
-		id.mDeclaration = std::string(idecls[i]);
-		lang.mIdentifiers.insert(std::make_pair(std::string(identifiers[i]), id));
-	}
-	editor.SetLanguageDefinition(lang);
-	//editor.SetPalette(TextEditor::GetLightPalette());
-
-	// error markers
-	TextEditor::ErrorMarkers markers;
-	markers.insert(std::make_pair<int, std::string>(6, "Example error here:\nInclude file not found: \"TextEditor.h\""));
-	markers.insert(std::make_pair<int, std::string>(41, "Another example error"));
-	editor.SetErrorMarkers(markers);
-
-	// "breakpoint" markers
-	//TextEditor::Breakpoints bpts;
-	//bpts.insert(24);
-	//bpts.insert(47);
-	//editor.SetBreakpoints(bpts);
-
-	static const char* fileToEdit = "ImGuiColorTextEdit/TextEditor.cpp";
-	//	static const char* fileToEdit = "test.cpp";
-
-	{
-		std::ifstream t(fileToEdit);
-		if (t.good())
+		for (int i = 0; i < sizeof(ppnames) / sizeof(ppnames[0]); ++i)
 		{
-			std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-			editor.SetText(str);
+			TextEditor::Identifier id;
+			id.mDeclaration = ppvalues[i];
+			lang.mPreprocIdentifiers.insert(std::make_pair(std::string(ppnames[i]), id));
 		}
-	}
+		for (int i = 0; i < sizeof(identifiers) / sizeof(identifiers[0]); ++i)
+		{
+			TextEditor::Identifier id;
+			id.mDeclaration = std::string(idecls[i]);
+			lang.mIdentifiers.insert(std::make_pair(std::string(identifiers[i]), id));
+		}
+		editor.SetLanguageDefinition(lang);
+
+		//editor.SetPalette(TextEditor::GetLightPalette());
+
+		// error markers
+		TextEditor::ErrorMarkers markers;
+		markers.insert(std::make_pair<int, std::string>(6, "Example error here:\nInclude file not found: \"TextEditor.h\""));
+		markers.insert(std::make_pair<int, std::string>(41, "Another example error"));
+		editor.SetErrorMarkers(markers);
+
+		// "breakpoint" markers
+		//TextEditor::Breakpoints bpts;
+		//bpts.insert(24);
+		//bpts.insert(47);
+		//editor.SetBreakpoints(bpts);
+
+		//	static const char* fileToEdit = "test.cpp";
+
+		{
+			std::ifstream t(fileToEdit);
+			if (t.good())
+			{
+				std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+				editor.SetText(str);
+			}
+		}
+
+		init = true;
+	} // !init
 
 	// Text editor window
 	auto cpos = editor.GetCursorPosition();
-	if (ImGui::Begin("Text Editor Demo", p_open, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
+	//if (ImGui::Begin("Text Editor Demo", p_open, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
 	{
 		ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_FirstUseEver);
 		if (ImGui::BeginMenuBar())
@@ -158,7 +164,7 @@ void ShowExampleTextEditor(bool* p_open)
 
 		editor.Render("TextEditor");
 	}
-	ImGui::End();
+	//ImGui::End();
 
 	return;
 }
