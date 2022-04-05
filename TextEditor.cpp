@@ -1872,7 +1872,10 @@ void TextEditor::Backspace()
 
 			u.mRemovedStart = u.mRemovedEnd = GetActualCursorCoordinates();
 			--u.mRemovedStart.mColumn;
-			--mState.mCursorPosition.mColumn;
+			if (line[cindex].mChar == '\t')
+				mState.mCursorPosition.mColumn -= 4;
+			else
+				--mState.mCursorPosition.mColumn;
 
 			while (cindex < line.size() && cend-- > cindex)
 			{
