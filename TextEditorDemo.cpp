@@ -1,4 +1,12 @@
-// This is an example implementation of the ImGui Color Text Editor.
+/************************************************************************
+ * This is an example implementation of the ImGui Color Text Editor.	*
+ ************************************************************************
+ * Instructions															*
+ * If you want to use ShowExampleTextEditor() as a fully encapsulated	*
+ * ImGui window, uncomment ImGui::Begin() and ImGui::End().				*
+ * Otherwise, call ShowExampleTextEditor() inside your own ImGui		*
+ * window.																*
+ * **********************************************************************/ 
 
 #include <fstream>
 #include <streambuf>
