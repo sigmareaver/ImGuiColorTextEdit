@@ -19,13 +19,14 @@
 
 void ShowExampleTextEditor(bool* p_open)
 {
+	using namespace ImGuiEx;
 	static bool init = false;
 	static ImVec4 clear_col = ImColor(114, 144, 154);
 	///////////////////////////////////////////////////////////////////////
 	// TEXT EDITOR SAMPLE
 	static TextEditor editor;
 	static auto lang = TextEditor::LanguageDefinition::CPlusPlus();
-	static const char* fileToEdit = "res/lua/gui/test_window.lua";
+	static const char* fileToEdit = "../src/main.cpp";
 
 	// set your own known preprocessor symbols...
 	static const char* ppnames[] = { "NULL", "PM_REMOVE",
